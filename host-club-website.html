@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>歡樂牛郎</title>
+    <style>
+        body {
+            font-family: 'Microsoft JhengHei', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #1a1a1a, #4a4a4a);
+            color: #fff;
+            min-height: 100vh;
+        }
+
+        header {
+            text-align: center;
+            padding: 2rem;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 10px;
+            margin-bottom: 2rem;
+        }
+
+        .contact-info {
+            text-align: center;
+            margin-bottom: 2rem;
+            font-size: 1.1rem;
+        }
+
+        .hosts-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            padding: 1rem;
+        }
+
+        .host-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 1rem;
+            transition: transform 0.3s ease;
+            cursor: pointer;
+        }
+
+        .host-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .host-image {
+            width: 100%;
+            height: 512px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+        }
+
+        .host-info {
+            padding: 1rem;
+        }
+
+        .host-info h3 {
+            margin: 0;
+            color: #ffd700;
+        }
+
+        .selected {
+            border: 3px solid #ffd700;
+        }
+
+        .submit-container {
+            text-align: center;
+            margin-top: 2rem;
+            padding: 1rem;
+        }
+
+        .submit-btn {
+            background: #2ecc71;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 5px;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .submit-btn:hover {
+            background: #27ae60;
+        }
+
+        .submit-btn:disabled {
+            background: #95a5a6;
+            cursor: not-allowed;
+        }
+
+        /* 確認頁面樣式 */
+        .confirmation-page {
+            display: none;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .confirmation-message {
+            font-size: 1.5rem;
+            margin-top: 2rem;
+            color: #ffd700;
+        }
+    </style>
+</head>
+<body>
+    <div id="selection-page">
+        <header>
+            <h1>請選則與你共度巫山的郎</h1>
+        </header>
+
+        <div class="contact-info">
+            <p>歡樂牛郎</p>
+            <p>地址: 台北市11114陽明山華岡路55號</p>
+            <p>電話: 123456789</p>
+        </div>
+
+        <div class="hosts-container">
+            <div class="host-card" onclick="selectHost(this)" data-name="也壽">
+                <img src="/api/placeholder/512/512" alt="也壽" class="host-image">
+                <div class="host-info">
+                    <h3>也壽</h3>
+                    <p>年齡: 24歲</p>
+                    <p>職業: 學生</p>
+                    <p>興趣: 王道征途泡泡系</p>
+                </div>
+            </div>
+
+            <div class="host-card" onclick="selectHost(this)" data-name="萬">
+                <img src="/api/placeholder/512/512" alt="萬" class="host-image">
+                <div class="host-info">
+                    <h3>萬</h3>
+                    <p>年齡: 20歲</p>
+                    <p>職業: ~~摔角選手~~</p>
+                    <p>興趣: SM</p>
+                </div>
+            </div>
+
+            <div class="host-card" onclick="selectHost(this)" data-name="比利海靈頓">
+                <img src="/api/placeholder/512/512" alt="比利海靈頓" class="host-image">
+                <div class="host-info">
+                    <h3>比利海靈頓</h3>
+                    <p>年齡: 56歲</p>
+                    <p>職業: 政治家</p>
+                    <p>興趣: 摔角</p>
+                </div>
+            </div>
+
+            <div class="host-card" onclick="selectHost(this)" data-name="里卡多米洛斯">
+                <img src="/api/placeholder/512/512" alt="里卡多米洛斯" class="host-image">
+                <div class="host-info">
+                    <h3>里卡多米洛斯</h3>
+                    <p>年齡: 47歲</p>
+                    <p>職業: 㚻片演員</p>
+                    <p>興趣: 跳舞</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="submit-container">
+            <button class="submit-btn" onclick="submitSelection()" disabled>選擇</button>
+        </div>
+    </div>
+
+    <div id="confirmation-page" class="confirmation-page">
+        <img id="selected-host-image" src="" alt="Selected Host" class="host-image">
+        <div class="confirmation-message">請好好享受你的夜晚。</div>
+    </div>
+
+    <script>
+        let selectedHost = null;
+
+        function selectHost(element) {
+            // Remove selected class from all cards
+            document.querySelectorAll('.host-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            
+            // Add selected class to clicked card
+            element.classList.add('selected');
+            
+            // Enable submit button
+            document.querySelector('.submit-btn').disabled = false;
+            
+            // Store selected host
+            selectedHost = {
+                name: element.dataset.name,
+                image: element.querySelector('.host-image').src
+            };
+        }
+
+        function submitSelection() {
+            if (!selectedHost) return;
+
+            // Hide selection page
+            document.getElementById('selection-page').style.display = 'none';
+            
+            // Show confirmation page
+            const confirmationPage = document.getElementById('confirmation-page');
+            confirmationPage.style.display = 'block';
+            
+            // Set selected host image
+            document.getElementById('selected-host-image').src = selectedHost.image;
+        }
+    </script>
+</body>
+</html>
