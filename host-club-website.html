@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>歡樂牛郎</title>
     <style>
+        /* Previous styles remain the same until confirmation-page */
         body {
             font-family: 'Microsoft JhengHei', sans-serif;
             margin: 0;
@@ -95,22 +96,55 @@
             cursor: not-allowed;
         }
 
-        /* 確認頁面樣式 */
+        /* Updated confirmation page styles */
         .confirmation-page {
             display: none;
             text-align: center;
             padding: 2rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .confirmation-image {
+            width: 512px;
+            height: 512px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin: 0 auto 2rem;
+            display: block;
         }
 
         .confirmation-message {
             font-size: 1.5rem;
-            margin-top: 2rem;
+            margin: 2rem auto;
             color: #ffd700;
+            padding: 1rem 2rem;
+            border: 2px solid #ffd700;
+            display: inline-block;
+            border-radius: 10px;
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        .return-btn {
+            background: #3498db;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 5px;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            margin-top: 2rem;
+        }
+
+        .return-btn:hover {
+            background: #2980b9;
         }
     </style>
 </head>
 <body>
     <div id="selection-page">
+        <!-- Previous selection page content remains the same -->
         <header>
             <h1>請選則與你共度巫山的郎</h1>
         </header>
@@ -123,7 +157,7 @@
 
         <div class="hosts-container">
             <div class="host-card" onclick="selectHost(this)" data-name="也壽">
-                <img src="/api/placeholder/512/512" alt="也壽" class="host-image">
+                <img src="ms.jpg" alt="也壽" class="host-image">
                 <div class="host-info">
                     <h3>也壽</h3>
                     <p>年齡: 24歲</p>
@@ -133,17 +167,17 @@
             </div>
 
             <div class="host-card" onclick="selectHost(this)" data-name="萬">
-                <img src="/api/placeholder/512/512" alt="萬" class="host-image">
+                <img src="van1.jpg" alt="萬" class="host-image">
                 <div class="host-info">
                     <h3>萬</h3>
                     <p>年齡: 20歲</p>
-                    <p>職業: ~~摔角選手~~</p>
+                    <p>職業: 摔角選手</p>
                     <p>興趣: SM</p>
                 </div>
             </div>
 
             <div class="host-card" onclick="selectHost(this)" data-name="比利海靈頓">
-                <img src="/api/placeholder/512/512" alt="比利海靈頓" class="host-image">
+                <img src="bily.jpg" alt="比利海靈頓" class="host-image">
                 <div class="host-info">
                     <h3>比利海靈頓</h3>
                     <p>年齡: 56歲</p>
@@ -153,7 +187,7 @@
             </div>
 
             <div class="host-card" onclick="selectHost(this)" data-name="里卡多米洛斯">
-                <img src="/api/placeholder/512/512" alt="里卡多米洛斯" class="host-image">
+                <img src="mig.jpg" alt="里卡多米洛斯" class="host-image">
                 <div class="host-info">
                     <h3>里卡多米洛斯</h3>
                     <p>年齡: 47歲</p>
@@ -169,26 +203,22 @@
     </div>
 
     <div id="confirmation-page" class="confirmation-page">
-        <img id="selected-host-image" src="" alt="Selected Host" class="host-image">
+        <img id="selected-host-image" src="" alt="Selected Host" class="confirmation-image">
         <div class="confirmation-message">請好好享受你的夜晚。</div>
+        <button class="return-btn" onclick="returnToSelection()">重新選擇</button>
     </div>
 
     <script>
         let selectedHost = null;
 
         function selectHost(element) {
-            // Remove selected class from all cards
             document.querySelectorAll('.host-card').forEach(card => {
                 card.classList.remove('selected');
             });
             
-            // Add selected class to clicked card
             element.classList.add('selected');
-            
-            // Enable submit button
             document.querySelector('.submit-btn').disabled = false;
             
-            // Store selected host
             selectedHost = {
                 name: element.dataset.name,
                 image: element.querySelector('.host-image').src
@@ -197,16 +227,24 @@
 
         function submitSelection() {
             if (!selectedHost) return;
-
-            // Hide selection page
-            document.getElementById('selection-page').style.display = 'none';
             
-            // Show confirmation page
+            document.getElementById('selection-page').style.display = 'none';
             const confirmationPage = document.getElementById('confirmation-page');
             confirmationPage.style.display = 'block';
             
-            // Set selected host image
             document.getElementById('selected-host-image').src = selectedHost.image;
+        }
+
+        function returnToSelection() {
+            document.getElementById('confirmation-page').style.display = 'none';
+            document.getElementById('selection-page').style.display = 'block';
+            
+            // Reset selection
+            selectedHost = null;
+            document.querySelector('.submit-btn').disabled = true;
+            document.querySelectorAll('.host-card').forEach(card => {
+                card.classList.remove('selected');
+            });
         }
     </script>
 </body>
